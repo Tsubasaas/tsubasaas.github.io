@@ -3,47 +3,28 @@ import { useState, useEffect } from "react";
 const PROFILE = {
   name: "Tsubasa",
   nameJa: "翼",
-  title: "AI & Data Consultant / Practitioner-Researcher",
+  title: "Fusion belly dancer, AI & Data consultant, trilingual thinker and developer.",
   photo: null, // placeholder
   links: [
-    { label: "LinkedIn", url: "https://linkedin.com/in/yourprofile", icon: "in" },
-    { label: "GitHub", url: "https://github.com/tsubasaas", icon: "gh" },
-    { label: "Instagram", url: "https://instagram.com/yourprofile", icon: "ig" },
-    { label: "note.com", url: "https://note.com/yourprofile", icon: "nt" },
-    { label: "Substack", url: "https://substack.com/@yourprofile", icon: "sb" },
+    { label: "LinkedIn", url: "www.linkedin.com/in/yi-fan-74869523b", icon: "in" },
+    { label: "GitHub", url: "https://github.com/Tsubasaas", icon: "gh" },
+    { label: "note.com", url: "https://note.com/sylvia_f", icon: "nt" },
+    { label: "Substack", url: "https://substack.com/@yfan296358", icon: "sb" },
   ],
   works: [
-    {
-      title: "東京正経研究所",
-      desc: "Trilingual content platform exploring AI, organizational theory, and human agency.",
-      tag: "CONTENT",
-    },
-    {
-      title: "Chiko Roundtable / 智子圆桌",
-      desc: "Salon-style discussion series for Tokyo-based professionals at the intersection of tech and culture.",
-      tag: "COMMUNITY",
-    },
-    {
-      title: "Agentic AI Implementation",
-      desc: "Enterprise AI transformation across financial services, manufacturing, and retail sectors.",
-      tag: "CONSULTING",
-    },
-    {
-      title: "Physical AI Research",
-      desc: "Self-study roadmap and landscape analysis on embodied intelligence and VLA ecosystems.",
-      tag: "RESEARCH",
-    },
     {
       title: "Still Us — RSVP App",
       desc: "Event management web app built with React, TypeScript, and Supabase.",
       tag: "DEV",
+      url: null,   // e.g. "https://stillus.app"
+      image: null, // e.g. "https://your-image-url.jpg"
     },
   ],
-  about:
-    "Consultant at Deloitte Tohmatsu Consulting, Tokyo — AI & Data practice. UTokyo graduate (Interdisciplinary Information Studies). Researching conditions for human creative agency amid rapid technological change. Trilingual: 中文 · 日本語 · English.",
+  aboutme:
+    "TBD",
 };
 
-const NAV_ITEMS = ["about", "links", "works"];
+const NAV_ITEMS = ["about me", "links", "works"];
 
 // ─── Blinking cursor ───
 function Cursor() {
@@ -75,7 +56,7 @@ function AboutPanel() {
       <p style={{ color: "var(--dim)", fontSize: 13, marginBottom: 6, fontFamily: "var(--mono)" }}>
         <span style={{ color: "var(--accent)" }}>$</span> cat about.txt
       </p>
-      <p style={{ color: "var(--fg)", lineHeight: 1.7, fontSize: 14 }}>{PROFILE.about}</p>
+      <p style={{ color: "var(--fg)", lineHeight: 1.7, fontSize: 14 }}>{PROFILE.aboutme}</p>
     </div>
   );
 }
@@ -156,18 +137,58 @@ function WorksPanel() {
       <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
         {PROFILE.works.map((w) => (
           <div key={w.title} style={{
-            padding: "12px 14px", borderRadius: 4,
-            border: "1px solid var(--border)", background: "var(--surface)",
+            borderRadius: 4, border: "1px solid var(--border)",
+            background: "var(--surface)", overflow: "hidden",
           }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-              <span style={{
-                fontSize: 10, fontFamily: "var(--mono)", color: "var(--accent)",
-                background: "rgba(0,255,136,0.08)", padding: "2px 7px", borderRadius: 3,
-                letterSpacing: 1,
-              }}>{w.tag}</span>
-              <span style={{ fontSize: 14, fontWeight: 600, color: "var(--fg)" }}>{w.title}</span>
+            {/* thumbnail */}
+            {w.image ? (
+              <img src={w.image} alt={w.title} style={{
+                width: "100%", height: 160, objectFit: "cover", display: "block",
+                borderBottom: "1px solid var(--border)",
+              }} />
+            ) : (
+              <div style={{
+                width: "100%", height: 100,
+                background: "repeating-linear-gradient(135deg, #111 0px, #111 10px, #0d0d0d 10px, #0d0d0d 20px)",
+                borderBottom: "1px solid var(--border)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <span style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--border)", letterSpacing: 2 }}>
+                  NO IMAGE
+                </span>
+              </div>
+            )}
+
+            <div style={{ padding: "12px 14px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+                <span style={{
+                  fontSize: 10, fontFamily: "var(--mono)", color: "var(--accent)",
+                  background: "rgba(0,255,136,0.08)", padding: "2px 7px", borderRadius: 3,
+                  letterSpacing: 1,
+                }}>{w.tag}</span>
+                <span style={{ fontSize: 14, fontWeight: 600, color: "var(--fg)" }}>{w.title}</span>
+              </div>
+              <p style={{ fontSize: 13, color: "var(--dim)", lineHeight: 1.5, margin: "0 0 10px" }}>{w.desc}</p>
+
+              {/* link */}
+              {w.url ? (
+                <a href={w.url} target="_blank" rel="noopener noreferrer" style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  fontSize: 11, fontFamily: "var(--mono)", color: "var(--accent)",
+                  textDecoration: "none", letterSpacing: 1,
+                  borderBottom: "1px solid rgba(0,255,136,0.3)", paddingBottom: 1,
+                }}>
+                  VIEW PROJECT →
+                </a>
+              ) : (
+                <span style={{
+                  fontSize: 11, fontFamily: "var(--mono)", color: "var(--border)",
+                  letterSpacing: 1,
+                }}>
+                  LINK TBD
+                </span>
+              )}
             </div>
-            <p style={{ fontSize: 13, color: "var(--dim)", lineHeight: 1.5, margin: 0 }}>{w.desc}</p>
           </div>
         ))}
       </div>
@@ -185,7 +206,7 @@ export default function Portfolio() {
     return () => clearTimeout(t);
   }, []);
 
-  const panels = { about: <AboutPanel />, links: <LinksPanel />, works: <WorksPanel /> };
+  const panels = { "about me": <AboutPanel />, links: <LinksPanel />, works: <WorksPanel /> };
 
   return (
     <div style={{
