@@ -16,7 +16,7 @@ const PROFILE = {
       title: "Still Us — RSVP App",
       desc: "Event management web app built with React, TypeScript, and Supabase.",
       tag: "DEV",
-      url: null,   // e.g. "https://stillus.app"
+      url: "https://alumni-rsvp-v2.vercel.app/event/stillus-gathering-event",   // e.g. "https://stillus.app"
       image: null, // e.g. "https://your-image-url.jpg"
     },
   ],
