@@ -33,9 +33,9 @@ const PROFILE = {
     },
   ],
   aboutme: {
-    en: "Hi, I'm Tsubasa.",
-    zh: "你好，我是 Tsubasa。",
-    ja: "こんにちは、Tsubasaです。",
+    en: "Hi, I'm Tsubasa. Welcome to my world.",
+    zh: "你好，我是 Tsubasa。欢迎来到我的世界。",
+    ja: "こんにちは、Tsubasaです。私の世界へようこそ。",
   },
 };
 
