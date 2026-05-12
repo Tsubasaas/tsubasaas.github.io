@@ -6,7 +6,7 @@ const PROFILE = {
   title: "Fusion belly dancer, AI & Data consultant, trilingual thinker and developer.",
   photo: null, // placeholder
   links: [
-    { label: "Instagram", url: "https://www.instagram.com/tsubasaas/", icon: "ig" },
+    { label: "Instagram", url: "https://www.instagram.com/sylvia_fyi?igsh=MWFwcjNqYm5vcWdraQ%3D%3D&utm_source=qr", icon: "ig" },
     { label: "GitHub", url: "https://github.com/Tsubasaas", icon: "gh" },
     { label: "note.com", url: "https://note.com/sylvia_f", icon: "nt" },
     { label: "Substack", url: "https://substack.com/@yfan296358", icon: "sb" },
