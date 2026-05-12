@@ -14,7 +14,7 @@ const PROFILE = {
   works: [
     {
       title: "Still Us — RSVP App",
-      desc: "Still Us is an app that turns "we should meet up" into an actual reunion, with one-tap RSVPs and an interactive star cluster that lights up as friends join.",
+      desc: 'Still Us is an app that turns "we should meet up" into an actual reunion, with one-tap RSVPs and an interactive star cluster that lights up as friends join.',
       tag: "DEV",
       url: "https://alumni-rsvp-v2.vercel.app/event/still-us-gathering",   // e.g. "https://stillus.app"
       image: null, // e.g. "https://your-image-url.jpg"
