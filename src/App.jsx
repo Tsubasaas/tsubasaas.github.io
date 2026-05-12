@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 const PROFILE = {
   name: "Tsubasa",
   nameJa: "翼",
-  title: "Fusion belly dancer, AI & Data consultant, trilingual thinker and developer.",
+  title: "Fusion belly dancer, AI Developer, trilingual thinker.",
   photo: null, // placeholder
   links: [
     { label: "Instagram", url: "https://www.instagram.com/sylvia_fyi?igsh=MWFwcjNqYm5vcWdraQ%3D%3D&utm_source=qr", icon: "ig" },
