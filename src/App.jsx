@@ -4,9 +4,9 @@ const PROFILE = {
   name: "Tsubasa",
   nameJa: "翼",
   title: {
-    en: "Fusion belly dancer, AI Developer, trilingual thinker.",
-    zh: "融合风格肚皮舞者，AI 开发者，三语思考者。",
-    ja: "フュージョンベリーダンサー、AI開発者、トリリンガルな思考者。",
+    en: "Trilingual Thinker, AI Developer & Business Consultant, Fusion Bellydance Performer.",
+    zh: "三语思考者，AI 开发者与商业顾问，Fusion Bellydance 表演者。",
+    ja: "トリリンガルな思考者、AI開発者・ビジネスコンサルタント、フュージョンベリーダンスパフォーマー。",
   },
   photo: null, // placeholder
   links: [
