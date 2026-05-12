@@ -3,7 +3,11 @@ import { useState, useEffect } from "react";
 const PROFILE = {
   name: "Tsubasa",
   nameJa: "翼",
-  title: "Fusion belly dancer, AI Developer, trilingual thinker.",
+  title: {
+    en: "Fusion belly dancer, AI Developer, trilingual thinker.",
+    zh: "融合风格肚皮舞者，AI 开发者，三语思考者。",
+    ja: "フュージョンベリーダンサー、AI開発者、トリリンガルな思考者。",
+  },
   photo: null, // placeholder
   links: [
     { label: "Instagram", url: "https://www.instagram.com/sylvia_fyi?igsh=MWFwcjNqYm5vcWdraQ%3D%3D&utm_source=qr", icon: "ig" },
@@ -13,18 +17,64 @@ const PROFILE = {
   ],
   works: [
     {
-      title: "Still Us — RSVP App",
-      desc: "Still Us turns reunion promises into reality, one-tap RSVPs, visualized as a living star cluster.",
+      title: {
+        en: "Still Us — RSVP App",
+        zh: "Still Us — RSVP 应用",
+        ja: "Still Us — RSVPアプリ",
+      },
+      desc: {
+        en: "Still Us turns reunion promises into reality, one-tap RSVPs, visualized as a living star cluster.",
+        zh: "Still Us 将重聚的约定变为现实，一键 RSVP，并以鲜活的星群呈现。",
+        ja: "Still Usは再会の約束を現実に変え、ワンタップRSVPを生きた星群として可視化します。",
+      },
       tag: "DEV",
       url: "https://alumni-rsvp-v2.vercel.app/event/still-us-gathering",   // e.g. "https://stillus.app"
       image: "/stillus_promo.jpg",
     },
   ],
-  aboutme:
-    "TBD",
+  aboutme: {
+    en: "Hi, I'm Tsubasa.",
+    zh: "你好，我是 Tsubasa。",
+    ja: "こんにちは、Tsubasaです。",
+  },
 };
 
-const NAV_ITEMS = ["about me", "links", "works"];
+const LANGUAGES = [
+  { code: "en", label: "EN" },
+  { code: "zh", label: "中文" },
+  { code: "ja", label: "日本語" },
+];
+
+const COPY = {
+  en: {
+    nav: { about: "about me", links: "links", works: "works" },
+    prompts: { about: "cat about.txt", links: "ls ~/links/", works: "ls ~/works/" },
+    viewProject: "VIEW PROJECT",
+    linkTbd: "LINK TBD",
+    noImage: "NO IMAGE",
+  },
+  zh: {
+    nav: { about: "关于我", links: "链接", works: "作品" },
+    prompts: { about: "cat about.txt", links: "ls ~/links/", works: "ls ~/works/" },
+    viewProject: "查看项目",
+    linkTbd: "链接待定",
+    noImage: "暂无图片",
+  },
+  ja: {
+    nav: { about: "私について", links: "リンク", works: "作品" },
+    prompts: { about: "cat about.txt", links: "ls ~/links/", works: "ls ~/works/" },
+    viewProject: "プロジェクトを見る",
+    linkTbd: "リンク未定",
+    noImage: "画像なし",
+  },
+};
+
+const NAV_ITEMS = ["about", "links", "works"];
+
+function getInitialLanguage() {
+  const saved = localStorage.getItem("tsubasa-language");
+  return LANGUAGES.some((lang) => lang.code === saved) ? saved : "en";
+}
 
 // ─── Blinking cursor ───
 function Cursor() {
@@ -50,19 +100,45 @@ function Avatar() {
 }
 
 // ─── Panel: About ───
-function AboutPanel() {
+function LanguageSwitcher({ language, onChange }) {
+  return (
+    <div style={{
+      display: "flex", gap: 0, marginTop: 22,
+      border: "1px solid var(--border)", borderRadius: 4, overflow: "hidden",
+    }}>
+      {LANGUAGES.map((lang) => (
+        <button
+          key={lang.code}
+          onClick={() => onChange(lang.code)}
+          style={{
+            minWidth: 54, background: language === lang.code ? "var(--accent)" : "transparent",
+            color: language === lang.code ? "#0a0a0a" : "var(--dim)",
+            border: "none", padding: "7px 11px", cursor: "pointer",
+            fontFamily: "var(--mono)", fontSize: 11, letterSpacing: 0,
+            fontWeight: language === lang.code ? 700 : 400,
+            transition: "all .2s", borderRight: "1px solid var(--border)",
+          }}
+        >
+          {lang.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function AboutPanel({ copy }) {
   return (
     <div style={{ maxWidth: 520 }}>
       <p style={{ color: "var(--dim)", fontSize: 13, marginBottom: 6, fontFamily: "var(--mono)" }}>
-        <span style={{ color: "var(--accent)" }}>$</span> cat about.txt
+        <span style={{ color: "var(--accent)" }}>$</span> {copy.prompts.about}
       </p>
-      <p style={{ color: "var(--fg)", lineHeight: 1.7, fontSize: 14 }}>{PROFILE.aboutme}</p>
+      <p style={{ color: "var(--fg)", lineHeight: 1.7, fontSize: 14 }}>{copy.aboutme}</p>
     </div>
   );
 }
 
 // ─── Panel: Links ───
-function LinksPanel() {
+function LinksPanel({ copy }) {
   const iconMap = {
     in: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -94,7 +170,7 @@ function LinksPanel() {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 360 }}>
       <p style={{ color: "var(--dim)", fontSize: 13, marginBottom: 2, fontFamily: "var(--mono)" }}>
-        <span style={{ color: "var(--accent)" }}>$</span> ls ~/links/
+        <span style={{ color: "var(--accent)" }}>$</span> {copy.prompts.links}
       </p>
       {PROFILE.links.map((l) => (
         <a
@@ -128,21 +204,21 @@ function LinksPanel() {
 }
 
 // ─── Panel: Works ───
-function WorksPanel() {
+function WorksPanel({ copy }) {
   return (
     <div style={{ maxWidth: 520 }}>
       <p style={{ color: "var(--dim)", fontSize: 13, marginBottom: 10, fontFamily: "var(--mono)" }}>
-        <span style={{ color: "var(--accent)" }}>$</span> ls ~/works/
+        <span style={{ color: "var(--accent)" }}>$</span> {copy.prompts.works}
       </p>
       <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
         {PROFILE.works.map((w) => (
-          <div key={w.title} style={{
+          <div key={w.title.en} style={{
             borderRadius: 4, border: "1px solid var(--border)",
             background: "var(--surface)", overflow: "hidden",
           }}>
             {/* thumbnail */}
             {w.image ? (
-              <img src={w.image} alt={w.title} style={{
+              <img src={w.image} alt={w.title[copy.language]} style={{
                 width: "100%", height: 160, objectFit: "cover", display: "block",
                 borderBottom: "1px solid var(--border)",
               }} />
@@ -154,7 +230,7 @@ function WorksPanel() {
                 display: "flex", alignItems: "center", justifyContent: "center",
               }}>
                 <span style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--border)", letterSpacing: 2 }}>
-                  NO IMAGE
+                  {copy.noImage}
                 </span>
               </div>
             )}
@@ -166,9 +242,9 @@ function WorksPanel() {
                   background: "rgba(0,255,136,0.08)", padding: "2px 7px", borderRadius: 3,
                   letterSpacing: 1,
                 }}>{w.tag}</span>
-                <span style={{ fontSize: 14, fontWeight: 600, color: "var(--fg)" }}>{w.title}</span>
+                <span style={{ fontSize: 14, fontWeight: 600, color: "var(--fg)" }}>{w.title[copy.language]}</span>
               </div>
-              <p style={{ fontSize: 13, color: "var(--dim)", lineHeight: 1.5, margin: "0 0 10px" }}>{w.desc}</p>
+              <p style={{ fontSize: 13, color: "var(--dim)", lineHeight: 1.5, margin: "0 0 10px" }}>{w.desc[copy.language]}</p>
 
               {/* link */}
               {w.url ? (
@@ -178,14 +254,14 @@ function WorksPanel() {
                   textDecoration: "none", letterSpacing: 1,
                   borderBottom: "1px solid rgba(0,255,136,0.3)", paddingBottom: 1,
                 }}>
-                  VIEW PROJECT →
+                  {copy.viewProject} →
                 </a>
               ) : (
                 <span style={{
                   fontSize: 11, fontFamily: "var(--mono)", color: "var(--border)",
                   letterSpacing: 1,
                 }}>
-                  LINK TBD
+                  {copy.linkTbd}
                 </span>
               )}
             </div>
@@ -200,13 +276,29 @@ function WorksPanel() {
 export default function Portfolio() {
   const [active, setActive] = useState(null);
   const [entered, setEntered] = useState(false);
+  const [language, setLanguage] = useState(getInitialLanguage);
 
   useEffect(() => {
     const t = setTimeout(() => setEntered(true), 300);
     return () => clearTimeout(t);
   }, []);
 
-  const panels = { "about me": <AboutPanel />, links: <LinksPanel />, works: <WorksPanel /> };
+  useEffect(() => {
+    localStorage.setItem("tsubasa-language", language);
+    document.documentElement.lang = language === "zh" ? "zh-CN" : language;
+  }, [language]);
+
+  const copy = {
+    ...COPY[language],
+    language,
+    title: PROFILE.title[language],
+    aboutme: PROFILE.aboutme[language],
+  };
+  const panels = {
+    about: <AboutPanel copy={copy} />,
+    links: <LinksPanel copy={copy} />,
+    works: <WorksPanel copy={copy} />,
+  };
 
   return (
     <div style={{
@@ -257,12 +349,14 @@ export default function Portfolio() {
           fontSize: 12, color: "var(--dim)", margin: "16px 0 0", textAlign: "center",
           maxWidth: 380, lineHeight: 1.6,
         }}>
-          {PROFILE.title}<Cursor />
+          {copy.title}<Cursor />
         </p>
+
+        <LanguageSwitcher language={language} onChange={setLanguage} />
 
         {/* nav */}
         <nav style={{
-          display: "flex", gap: 0, marginTop: 36,
+          display: "flex", gap: 0, marginTop: 24,
           border: "1px solid var(--border)", borderRadius: 4, overflow: "hidden",
         }}>
           {NAV_ITEMS.map((item) => (
@@ -284,7 +378,7 @@ export default function Portfolio() {
                 if (active !== item) e.currentTarget.style.color = "var(--dim)";
               }}
             >
-              {item}
+              {copy.nav[item]}
             </button>
           ))}
         </nav>
