@@ -47,21 +47,21 @@ const LANGUAGES = [
 
 const COPY = {
   en: {
-    nav: { about: "about me", links: "links", works: "works" },
+    nav: { about: "about me", links: "contact me", works: "works" },
     prompts: { about: "cat about.txt", links: "ls ~/links/", works: "ls ~/works/" },
     viewProject: "VIEW PROJECT",
     linkTbd: "LINK TBD",
     noImage: "NO IMAGE",
   },
   zh: {
-    nav: { about: "关于我", links: "链接", works: "作品" },
+    nav: { about: "关于我", links: "contact me", works: "作品" },
     prompts: { about: "cat about.txt", links: "ls ~/links/", works: "ls ~/works/" },
     viewProject: "查看项目",
     linkTbd: "链接待定",
     noImage: "暂无图片",
   },
   ja: {
-    nav: { about: "私について", links: "リンク", works: "作品" },
+    nav: { about: "私について", links: "contact me", works: "作品" },
     prompts: { about: "cat about.txt", links: "ls ~/links/", works: "ls ~/works/" },
     viewProject: "プロジェクトを見る",
     linkTbd: "リンク未定",
@@ -69,7 +69,7 @@ const COPY = {
   },
 };
 
-const NAV_ITEMS = ["about", "links", "works"];
+const NAV_ITEMS = ["about", "works", "links"];
 
 function getInitialLanguage() {
   const saved = localStorage.getItem("tsubasa-language");
