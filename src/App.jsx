@@ -29,7 +29,7 @@ const PROFILE = {
       },
       tag: "DEV",
       url: "https://chikoroundtable.com/login",
-      image: "/stillus_promo.jpg",
+      image: "/chiko_roundtable_promo.png",
     },
   ],
   aboutme: {
