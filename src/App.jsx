@@ -18,17 +18,17 @@ const PROFILE = {
   works: [
     {
       title: {
-        en: "Still Us — RSVP App",
-        zh: "Still Us — RSVP 应用",
-        ja: "Still Us — RSVPアプリ",
+        en: "Chiko Roundtable",
+        zh: "Chiko Roundtable",
+        ja: "Chiko Roundtable",
       },
       desc: {
-        en: "Still Us turns reunion promises into reality, one-tap RSVPs, visualized as a living star cluster.",
-        zh: "Still Us 将重聚的约定变为现实，一键 RSVP，并以鲜活的星群呈现。",
-        ja: "Still Usは再会の約束を現実に変え、ワンタップRSVPを生きた星群として可視化します。",
+        en: "A private login portal for Chiko Roundtable members and event participants.",
+        zh: "面向 Chiko Roundtable 成员与活动参与者的登录入口。",
+        ja: "Chiko Roundtableのメンバーとイベント参加者向けログインポータル。",
       },
       tag: "DEV",
-      url: "https://alumni-rsvp-v2.vercel.app/event/still-us-gathering",   // e.g. "https://stillus.app"
+      url: "https://chikoroundtable.com/login",
       image: "/stillus_promo.jpg",
     },
   ],
