@@ -34,12 +34,13 @@ function ExternalLink({ href, children, ...props }) {
   return <a href={href} target="_blank" rel="noopener noreferrer" {...props}>{children}</a>;
 }
 function ProjectVisual({ kind }) {
-  if (kind === "chiko") return <div className="project-visual chiko-visual"><img src="/chiko_roundtable_promo.png" alt="" /><div className="visual-corner">CHIKO / ROUNDTABLE</div></div>;
-  return <div className="project-visual moment-visual" aria-hidden="true">
-    <div className="orbit orbit-one" /><div className="orbit orbit-two" />
-    <div className="memory-card card-back"><span>MEMORY / 001</span><i>✧</i></div>
-    <div className="memory-card card-front"><span>MOMENTWEAVER</span><div className="star-art">✳</div><small>COLLECT THE<br />EXTRAORDINARY.</small></div>
-    <span className="floating-star">+</span><div className="visual-corner">A LITTLE EVERYDAY MAGIC</div>
+  return <div className={`project-visual ${kind}-visual`}>
+    <img
+      src={kind === "chiko" ? "/chiko_roundtable_promo.png" : "/momentweaver-cover.svg"}
+      alt=""
+      width="480"
+      height="270"
+    />
   </div>;
 }
 export default function Portfolio() {
