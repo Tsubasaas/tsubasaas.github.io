@@ -1,415 +1,82 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import "./styles.css";
 
-const PROFILE = {
-  name: "Tsubasa",
-  nameJa: "翼",
-  title: {
-    en: "Trilingual Thinker, AI Developer & Business Consultant, Fusion Bellydance Performer.",
-    zh: "三语思考者，AI 开发者与商业顾问，Fusion Bellydance 表演者。",
-    ja: "トリリンガルな思考者、AI開発者・ビジネスコンサルタント、フュージョンベリーダンスパフォーマー。",
-  },
-  photo: null, // placeholder
-  links: [
-    { label: "Instagram", url: "https://www.instagram.com/sylvia_fyi?igsh=MWFwcjNqYm5vcWdraQ%3D%3D&utm_source=qr", icon: "ig" },
-    { label: "GitHub", url: "https://github.com/Tsubasaas", icon: "gh" },
-    { label: "note.com", url: "https://note.com/sylvia_f", icon: "nt" },
-    { label: "Substack", url: "https://substack.com/@yfan296358", icon: "sb" },
-  ],
-  works: [
-    {
-      title: {
-        en: "Chiko Roundtable",
-        zh: "Chiko Roundtable",
-        ja: "Chiko Roundtable",
-      },
-      desc: {
-        en: "A private login portal for Chiko Roundtable members and event participants.",
-        zh: "面向 Chiko Roundtable 成员与活动参与者的登录入口。",
-        ja: "Chiko Roundtableのメンバーとイベント参加者向けログインポータル。",
-      },
-      tag: "DEV",
-      url: "https://chikoroundtable.com/login",
-      image: "/chiko_roundtable_promo.png",
-    },
-  ],
-  aboutme: {
-    en: "Hi, I'm Tsubasa. Welcome to my world.",
-    zh: "你好，我是 Tsubasa。欢迎来到我的世界。",
-    ja: "こんにちは、Tsubasaです。私の世界へようこそ。",
-  },
-};
-
-const LANGUAGES = [
-  { code: "en", label: "EN" },
-  { code: "zh", label: "中文" },
-  { code: "ja", label: "日本語" },
-];
-
+const LANGUAGES = [{ code: "en", label: "EN" }, { code: "zh", label: "中文" }, { code: "ja", label: "日本語" }];
 const COPY = {
   en: {
-    nav: { about: "about me", links: "link", works: "works" },
-    prompts: { about: "cat about.txt", links: "ls ~/links/", works: "ls ~/works/" },
-    viewProject: "VIEW PROJECT",
-    linkTbd: "LINK TBD",
-    noImage: "NO IMAGE",
+    portfolio: "INDEPENDENT PORTFOLIO", language: "Language", nav: "Explore", work: "Work", writing: "Writing", publications: "Publications",
+    intro: "Thinking across languages. Creating across worlds.", bio: "Trilingual thinker, AI developer & business consultant. Fusion bellydance performer.", welcome: "Welcome to my corner of the internet.", connect: "ELSEWHERE", selected: "SELECTED", heading: "WORK", subtitle: "Ideas, translated into things you can explore.",
+    project: "Open project", card: "EVERYDAY MAGIC", community: "PEOPLE & CONNECTION", moment: "Turn everyday moments into collectible cards. A space to collect, create, and share a little everyday magic.", chiko: "A private portal connecting Chiko Roundtable members and event participants.",
+    writingHeading: "WRITING", writingSub: "Notes, ideas, and perspectives across languages.", writingEmpty: "The next page is still being written.", writingNote: "Selected writing will live here. In the meantime, find me on note and Substack.", pubHeading: "PUBLICATIONS", pubSub: "A growing collection of published work.", pubEmpty: "A space for what comes next.", pubNote: "Publications will be added here as they become available.", upcoming: "TO BE CONTINUED", archive: "PERSONAL ARCHIVE", footer: "Always exploring. Always becoming.", skip: "Skip to content", motion: "Motion", on: "On", off: "Off", portrait: "Tsubasa’s avatar",
   },
   zh: {
-    nav: { about: "关于我", links: "link", works: "作品" },
-    prompts: { about: "cat about.txt", links: "ls ~/links/", works: "ls ~/works/" },
-    viewProject: "查看项目",
-    linkTbd: "链接待定",
-    noImage: "暂无图片",
+    portfolio: "个人作品集", language: "语言", nav: "浏览", work: "作品", writing: "写作", publications: "出版发表", intro: "在语言之间思考，在世界之间创造。", bio: "三语思考者、AI 开发者与商业顾问。Fusion Bellydance 表演者。", welcome: "欢迎来到我的互联网小世界。", connect: "在别处找到我", selected: "精选", heading: "作品", subtitle: "把想法变成可以探索的世界。", project: "探索项目", card: "日常里的魔法", community: "人与连接", moment: "把生活瞬间制作成可收藏的卡片。在这里记录、创造、分享日常里的小小魔法。", chiko: "连接 Chiko Roundtable 成员与活动参与者的专属入口。", writingHeading: "写作", writingSub: "跨越语言的笔记、想法与观察。", writingEmpty: "下一页，正在酝酿。", writingNote: "未来的精选文章会收录在这里。现在可以先到 note 和 Substack 找到我。", pubHeading: "出版发表", pubSub: "持续积累的发表作品。", pubEmpty: "为下一段探索留一个位置。", pubNote: "之后的出版与发表内容将在这里更新。", upcoming: "未完待续", archive: "个人档案", footer: "不断探索，不断成为。", skip: "跳转到正文", motion: "动态效果", on: "开", off: "关", portrait: "Tsubasa 的头像",
   },
   ja: {
-    nav: { about: "私について", links: "link", works: "作品" },
-    prompts: { about: "cat about.txt", links: "ls ~/links/", works: "ls ~/works/" },
-    viewProject: "プロジェクトを見る",
-    linkTbd: "リンク未定",
-    noImage: "画像なし",
+    portfolio: "個人ポートフォリオ", language: "言語", nav: "コンテンツ", work: "作品", writing: "エッセイ", publications: "出版・掲載", intro: "言語を越えて考え、世界を越えてつくる。", bio: "トリリンガルな思考者、AI開発者・ビジネスコンサルタント。フュージョンベリーダンスパフォーマー。", welcome: "私の小さなインターネットの世界へようこそ。", connect: "ほかの場所で", selected: "ピックアップ", heading: "作品", subtitle: "アイデアを、探索できる世界へ。", project: "プロジェクトを見る", card: "日常の魔法", community: "人とつながり", moment: "日々の瞬間を、集められるカードに。記録し、つくり、日常の小さな魔法を分かち合う場所。", chiko: "Chiko Roundtableのメンバーとイベント参加者をつなぐ専用ポータル。", writingHeading: "エッセイ", writingSub: "言語を越えたノート、アイデア、視点。", writingEmpty: "次のページは、まだ執筆中。", writingNote: "これから選りすぐりの記事を掲載します。今はnoteとSubstackでお会いしましょう。", pubHeading: "出版・掲載", pubSub: "少しずつ増えていく、発表した作品の記録。", pubEmpty: "次の探求のための場所。", pubNote: "出版・掲載情報はこちらで随時更新します。", upcoming: "つづく", archive: "パーソナルアーカイブ", footer: "いつも探求し、変わり続ける。", skip: "本文へスキップ", motion: "アニメーション", on: "オン", off: "オフ", portrait: "Tsubasaのアバター",
   },
 };
-
-const NAV_ITEMS = ["about", "works", "links"];
-
-function getInitialLanguage() {
-  const saved = localStorage.getItem("tsubasa-language");
-  return LANGUAGES.some((lang) => lang.code === saved) ? saved : "en";
+const LINKS = [
+  { label: "GitHub", url: "https://github.com/Tsubasaas" },
+  { label: "Instagram", url: "https://www.instagram.com/sylvia_fyi?igsh=MWFwcjNqYm5vcWdraQ%3D%3D&utm_source=qr" },
+  { label: "note", url: "https://note.com/sylvia_f" },
+  { label: "Substack", url: "https://substack.com/@yfan296358" },
+];
+const PROJECTS = [
+  { name: "Momentweaver", url: "https://www.momentweaver.com/", type: "card", desc: "moment", visual: "moment" },
+  { name: "Chiko Roundtable", url: "https://chikoroundtable.com/login", type: "community", desc: "chiko", visual: "chiko" },
+];
+function initialLanguage() {
+  try { const saved = localStorage.getItem("tsubasa-language"); return LANGUAGES.some(l => l.code === saved) ? saved : "en"; } catch { return "en"; }
 }
-
-// ─── Blinking cursor ───
-function Cursor() {
-  return <span style={{ animation: "blink 1s step-end infinite", color: "var(--accent)" }}>_</span>;
+function Arrow() { return <span aria-hidden="true">↗</span>; }
+function ExternalLink({ href, children, ...props }) {
+  return <a href={href} target="_blank" rel="noopener noreferrer" {...props}>{children}</a>;
 }
-
-// ─── Avatar ───
-function Avatar() {
-  return (
-    <div style={{
-      width: 120, height: 120, borderRadius: "50%",
-      background: "var(--surface)", border: "1px solid var(--border)",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      fontSize: 40, color: "var(--accent)", fontFamily: "var(--mono)",
-      letterSpacing: 2, userSelect: "none", overflow: "hidden",
-    }}>
-      {PROFILE.photo
-        ? <img src={PROFILE.photo} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-        : "翼"
-      }
-    </div>
-  );
+function ProjectVisual({ kind }) {
+  if (kind === "chiko") return <div className="project-visual chiko-visual"><img src="/chiko_roundtable_promo.png" alt="" /><div className="visual-corner">CHIKO / ROUNDTABLE</div></div>;
+  return <div className="project-visual moment-visual" aria-hidden="true">
+    <div className="orbit orbit-one" /><div className="orbit orbit-two" />
+    <div className="memory-card card-back"><span>MEMORY / 001</span><i>✧</i></div>
+    <div className="memory-card card-front"><span>MOMENTWEAVER</span><div className="star-art">✳</div><small>COLLECT THE<br />EXTRAORDINARY.</small></div>
+    <span className="floating-star">+</span><div className="visual-corner">A LITTLE EVERYDAY MAGIC</div>
+  </div>;
 }
-
-// ─── Panel: About ───
-function LanguageSwitcher({ language, onChange }) {
-  return (
-    <div style={{
-      display: "flex", gap: 0, marginTop: 22,
-      border: "1px solid var(--border)", borderRadius: 4, overflow: "hidden",
-    }}>
-      {LANGUAGES.map((lang) => (
-        <button
-          key={lang.code}
-          onClick={() => onChange(lang.code)}
-          style={{
-            minWidth: 54, background: language === lang.code ? "var(--accent)" : "transparent",
-            color: language === lang.code ? "#0a0a0a" : "var(--dim)",
-            border: "none", padding: "7px 11px", cursor: "pointer",
-            fontFamily: "var(--mono)", fontSize: 11, letterSpacing: 0,
-            fontWeight: language === lang.code ? 700 : 400,
-            transition: "all .2s", borderRight: "1px solid var(--border)",
-          }}
-        >
-          {lang.label}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function AboutPanel({ copy }) {
-  return (
-    <div style={{ maxWidth: 520 }}>
-      <p style={{ color: "var(--dim)", fontSize: 13, marginBottom: 6, fontFamily: "var(--mono)" }}>
-        <span style={{ color: "var(--accent)" }}>$</span> {copy.prompts.about}
-      </p>
-      <p style={{ color: "var(--fg)", lineHeight: 1.7, fontSize: 14 }}>{copy.aboutme}</p>
-    </div>
-  );
-}
-
-// ─── Panel: Links ───
-function LinksPanel({ copy }) {
-  const iconMap = {
-    in: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
-      </svg>
-    ),
-    gh: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
-      </svg>
-    ),
-    ig: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
-      </svg>
-    ),
-    nt: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
-      </svg>
-    ),
-    sb: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/>
-      </svg>
-    ),
-  };
-
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 10, maxWidth: 360 }}>
-      <p style={{ color: "var(--dim)", fontSize: 13, marginBottom: 2, fontFamily: "var(--mono)" }}>
-        <span style={{ color: "var(--accent)" }}>$</span> {copy.prompts.links}
-      </p>
-      {PROFILE.links.map((l) => (
-        <a
-          key={l.label}
-          href={l.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display: "flex", alignItems: "center", gap: 10,
-            color: "var(--fg)", textDecoration: "none", fontFamily: "var(--mono)",
-            fontSize: 14, padding: "8px 12px", borderRadius: 4,
-            border: "1px solid var(--border)", transition: "all .2s",
-            background: "transparent",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = "var(--accent)";
-            e.currentTarget.style.color = "var(--accent)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = "var(--border)";
-            e.currentTarget.style.color = "var(--fg)";
-          }}
-        >
-          <span style={{ opacity: 0.7, display: "flex" }}>{iconMap[l.icon]}</span>
-          <span>{l.label}</span>
-          <span style={{ marginLeft: "auto", opacity: 0.3, fontSize: 11 }}>→</span>
-        </a>
-      ))}
-    </div>
-  );
-}
-
-// ─── Panel: Works ───
-function WorksPanel({ copy }) {
-  return (
-    <div style={{ maxWidth: 520 }}>
-      <p style={{ color: "var(--dim)", fontSize: 13, marginBottom: 10, fontFamily: "var(--mono)" }}>
-        <span style={{ color: "var(--accent)" }}>$</span> {copy.prompts.works}
-      </p>
-      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-        {PROFILE.works.map((w) => (
-          <div key={w.title.en} style={{
-            borderRadius: 4, border: "1px solid var(--border)",
-            background: "var(--surface)", overflow: "hidden",
-          }}>
-            {/* thumbnail */}
-            {w.image ? (
-              <img src={w.image} alt={w.title[copy.language]} style={{
-                width: "100%", height: 160, objectFit: "cover", display: "block",
-                borderBottom: "1px solid var(--border)",
-              }} />
-            ) : (
-              <div style={{
-                width: "100%", height: 100,
-                background: "repeating-linear-gradient(135deg, #111 0px, #111 10px, #0d0d0d 10px, #0d0d0d 20px)",
-                borderBottom: "1px solid var(--border)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-              }}>
-                <span style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--border)", letterSpacing: 2 }}>
-                  {copy.noImage}
-                </span>
-              </div>
-            )}
-
-            <div style={{ padding: "12px 14px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
-                <span style={{
-                  fontSize: 10, fontFamily: "var(--mono)", color: "var(--accent)",
-                  background: "rgba(0,255,136,0.08)", padding: "2px 7px", borderRadius: 3,
-                  letterSpacing: 1,
-                }}>{w.tag}</span>
-                <span style={{ fontSize: 14, fontWeight: 600, color: "var(--fg)" }}>{w.title[copy.language]}</span>
-              </div>
-              <p style={{ fontSize: 13, color: "var(--dim)", lineHeight: 1.5, margin: "0 0 10px" }}>{w.desc[copy.language]}</p>
-
-              {/* link */}
-              {w.url ? (
-                <a href={w.url} target="_blank" rel="noopener noreferrer" style={{
-                  display: "inline-flex", alignItems: "center", gap: 6,
-                  fontSize: 11, fontFamily: "var(--mono)", color: "var(--accent)",
-                  textDecoration: "none", letterSpacing: 1,
-                  borderBottom: "1px solid rgba(0,255,136,0.3)", paddingBottom: 1,
-                }}>
-                  {copy.viewProject} →
-                </a>
-              ) : (
-                <span style={{
-                  fontSize: 11, fontFamily: "var(--mono)", color: "var(--border)",
-                  letterSpacing: 1,
-                }}>
-                  {copy.linkTbd}
-                </span>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── Main ───
 export default function Portfolio() {
-  const [active, setActive] = useState(null);
-  const [entered, setEntered] = useState(false);
-  const [language, setLanguage] = useState(getInitialLanguage);
-
+  const [language, setLanguage] = useState(initialLanguage);
+  const [section, setSection] = useState("work");
+  const [motion, setMotion] = useState(() => !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const copy = COPY[language];
   useEffect(() => {
-    const t = setTimeout(() => setEntered(true), 300);
-    return () => clearTimeout(t);
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("tsubasa-language", language);
+    try { localStorage.setItem("tsubasa-language", language); } catch { /* Storage may be unavailable. */ }
     document.documentElement.lang = language === "zh" ? "zh-CN" : language;
   }, [language]);
-
-  const copy = {
-    ...COPY[language],
-    language,
-    title: PROFILE.title[language],
-    aboutme: PROFILE.aboutme[language],
-  };
-  const panels = {
-    about: <AboutPanel copy={copy} />,
-    links: <LinksPanel copy={copy} />,
-    works: <WorksPanel copy={copy} />,
-  };
-
-  return (
-    <div style={{
-      "--bg": "#0a0a0a", "--fg": "#e0e0e0", "--dim": "#777", "--accent": "#00ff88",
-      "--border": "#222", "--surface": "#111", "--mono": "'IBM Plex Mono', 'SF Mono', 'Fira Code', monospace",
-      background: "var(--bg)", color: "var(--fg)", minHeight: "100vh",
-      fontFamily: "var(--mono)", display: "flex", flexDirection: "column",
-      alignItems: "center", justifyContent: "center", position: "relative",
-      overflow: "hidden",
-    }}>
-      {/* noise overlay */}
-      <div style={{
-        position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0,
-        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E")`,
-        backgroundSize: "256px",
-      }} />
-
-      {/* scanline */}
-      <div style={{
-        position: "fixed", inset: 0, pointerEvents: "none", zIndex: 1,
-        background: "repeating-linear-gradient(transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px)",
-      }} />
-
-      {/* content */}
-      <div style={{
-        position: "relative", zIndex: 2, display: "flex", flexDirection: "column",
-        alignItems: "center", gap: 0, width: "100%", maxWidth: 600,
-        padding: "0 24px", boxSizing: "border-box",
-        opacity: entered ? 1 : 0, transform: entered ? "translateY(0)" : "translateY(12px)",
-        transition: "all 0.8s cubic-bezier(0.16,1,0.3,1)",
-      }}>
-        {/* avatar */}
-        <Avatar />
-
-        {/* name */}
-        <h1 style={{
-          fontSize: 28, fontWeight: 300, margin: "20px 0 4px",
-          letterSpacing: 6, color: "var(--fg)", textTransform: "uppercase",
-        }}>
-          {PROFILE.name}
-        </h1>
-        <p style={{ fontSize: 12, color: "var(--dim)", margin: 0, letterSpacing: 2 }}>
-          {PROFILE.nameJa}
-        </p>
-
-        {/* subtitle */}
-        <p style={{
-          fontSize: 12, color: "var(--dim)", margin: "16px 0 0", textAlign: "center",
-          maxWidth: 380, lineHeight: 1.6,
-        }}>
-          {copy.title}<Cursor />
-        </p>
-
-        <LanguageSwitcher language={language} onChange={setLanguage} />
-
-        {/* nav */}
-        <nav style={{
-          display: "flex", gap: 0, marginTop: 24,
-          border: "1px solid var(--border)", borderRadius: 4, overflow: "hidden",
-        }}>
-          {NAV_ITEMS.map((item) => (
-            <button
-              key={item}
-              onClick={() => setActive(active === item ? null : item)}
-              style={{
-                background: active === item ? "var(--accent)" : "transparent",
-                color: active === item ? "#0a0a0a" : "var(--dim)",
-                border: "none", padding: "10px 28px", cursor: "pointer",
-                fontFamily: "var(--mono)", fontSize: 12, letterSpacing: 2,
-                textTransform: "uppercase", fontWeight: active === item ? 700 : 400,
-                transition: "all .2s", borderRight: "1px solid var(--border)",
-              }}
-              onMouseEnter={(e) => {
-                if (active !== item) e.currentTarget.style.color = "var(--fg)";
-              }}
-              onMouseLeave={(e) => {
-                if (active !== item) e.currentTarget.style.color = "var(--dim)";
-              }}
-            >
-              {copy.nav[item]}
-            </button>
-          ))}
-        </nav>
-
-        {/* panel */}
-        <div style={{
-          marginTop: 28, width: "100%",
-          maxHeight: active ? 600 : 0, opacity: active ? 1 : 0,
-          overflow: active ? "auto" : "hidden",
-          transition: "max-height 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease",
-        }}>
-          {active && panels[active]}
-        </div>
-
-        {/* footer */}
-        <p style={{
-          marginTop: 48, fontSize: 10, color: "var(--border)", letterSpacing: 1,
-        }}>
-          © {new Date().getFullYear()} TSUBASA
-        </p>
-      </div>
-
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600;700&display=swap');
-        @keyframes blink { 50% { opacity: 0; } }
-        * { box-sizing: border-box; }
-        body { margin: 0; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #222; border-radius: 2px; }
-      `}</style>
+  return <div className={`portfolio ${motion ? "motion-on" : "motion-off"}`}>
+    <a className="skip-link" href="#main-content">{copy.skip}</a>
+    <div className="code-rain" aria-hidden="true">{Array.from({ length: 22 }, (_, i) => <span key={i} style={{ "--column": i, "--delay": `${-i * 1.7}s` }}>{i % 2 ? "01 ア イ 0 ツ 1 キ 01 ユ 0 メ 1" : "1 ヲ 0 シ 01 コ 1 ト 0 ナ 10"}</span>)}</div>
+    <header className="topbar">
+      <a className="wordmark" href="#" onClick={() => setSection("work")} aria-label="Tsubasa"><span className="brand-symbol">翼</span> TSUBASA<span className="brand-cursor">_</span></a>
+      <div className="language-switch" role="group" aria-label={copy.language}><span className="language-caption">{copy.language}</span>{LANGUAGES.map(l => <button key={l.code} type="button" lang={l.code} aria-pressed={language === l.code} onClick={() => setLanguage(l.code)}>{l.label}</button>)}</div>
+    </header>
+    <div className="page-shell">
+      <aside className="profile">
+        <div className="profile-topline"><span className="status-dot" />{copy.portfolio}</div>
+        <div className="portrait-frame"><img src="/avatar.jpg" alt={copy.portrait} width="1080" height="1080" /><span className="portrait-index">TS / 01</span><span className="portrait-cross">+</span></div>
+        <h1>Tsubasa<span>翼</span></h1>
+        <p className="profile-intro">{copy.intro}</p><p className="profile-bio">{copy.bio}</p>
+        <div className="profile-divider" /><p className="small-label">{copy.connect}</p>
+        <div className="social-links">{LINKS.map(l => <ExternalLink key={l.label} href={l.url}>{l.label}<Arrow /></ExternalLink>)}</div>
+        <p className="profile-note"><span aria-hidden="true">&gt;</span> {copy.welcome}<span className="text-cursor" aria-hidden="true">_</span></p>
+      </aside>
+      <main id="main-content" tabIndex="-1">
+        <nav className="section-nav" aria-label={copy.nav}>{["work", "writing", "publications"].map((item, i) => <button type="button" key={item} onClick={() => setSection(item)} aria-current={section === item ? "page" : undefined}><span className="nav-number">0{i + 1}</span>{copy[item]}{item === "work" && <span className="item-count">02</span>}</button>)}</nav>
+        <section className="content-section" key={section} aria-labelledby="section-title">
+          <div className="section-heading"><p className="small-label"><span className="green">//</span> {section === "work" ? copy.selected : copy.archive}<span className="heading-line" /></p><h2 id="section-title">{section === "work" ? copy.heading : section === "writing" ? copy.writingHeading : copy.pubHeading}<span className="heading-dot">.</span></h2><p className="section-subtitle">{section === "work" ? copy.subtitle : section === "writing" ? copy.writingSub : copy.pubSub}</p><span className="section-coordinate" aria-hidden="true">[ 0{["work", "writing", "publications"].indexOf(section) + 1} — 03 ]</span></div>
+          {section === "work" ? <div className="project-grid">{PROJECTS.map((project, i) => <article className="project-card" key={project.name}><ExternalLink href={project.url} className="project-link" aria-label={`${copy.project}: ${project.name}`}><div className="project-top"><span>0{i + 1} <span className="muted">/ {copy[project.type]}</span></span><Arrow /></div><ProjectVisual kind={project.visual} /><div className="project-details"><span className="project-kind">WEB EXPERIENCE</span><h3>{project.name}</h3><p>{copy[project.desc]}</p><div className="project-cta">{copy.project}<Arrow /></div></div></ExternalLink></article>)}</div> : <div className="coming-soon"><div className="empty-glyph" aria-hidden="true">{section === "writing" ? "[ _ ]" : "{ … }"}</div><p className="small-label green">{copy.upcoming}</p><h3>{section === "writing" ? copy.writingEmpty : copy.pubEmpty}</h3><p>{section === "writing" ? copy.writingNote : copy.pubNote}</p>{section === "writing" && <div className="writing-links">{LINKS.slice(2).map(l => <ExternalLink key={l.label} href={l.url}>{l.label}<Arrow /></ExternalLink>)}</div>}</div>}
+          <div className="section-end" aria-hidden="true"><span>+</span><span>{section === "work" ? "END OF SELECTED WORK / MORE TO COME" : "TO BE CONTINUED"}</span><span>+</span></div>
+        </section>
+      </main>
     </div>
-  );
+    <footer><span>© {new Date().getFullYear()} TSUBASA</span><span className="footer-thought">{copy.footer}</span><button type="button" className="motion-toggle" aria-pressed={motion} onClick={() => setMotion(!motion)}><span className={motion ? "status-dot" : "status-dot inactive"} />{copy.motion}: {motion ? copy.on : copy.off}</button></footer>
+  </div>;
 }
