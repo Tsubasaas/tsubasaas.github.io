@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./styles.css";
 
 const LANGUAGES = [{ code: "en", label: "EN" }, { code: "zh", label: "中文" }, { code: "ja", label: "日本語" }];
+const THEME_COPY = { en: { light: "Light", dark: "Dark", theme: "Theme" }, zh: { light: "浅色", dark: "深色", theme: "主题" }, ja: { light: "ライト", dark: "ダーク", theme: "テーマ" } };
 const COPY = {
   en: {
     portfolio: "INDEPENDENT PORTFOLIO", language: "Language", nav: "Explore", work: "Work", writing: "Writing", publications: "Publications",
@@ -29,6 +30,9 @@ const PROJECTS = [
 function initialLanguage() {
   try { const saved = localStorage.getItem("tsubasa-language"); return LANGUAGES.some(l => l.code === saved) ? saved : "en"; } catch { return "en"; }
 }
+function initialTheme() {
+  try { return localStorage.getItem("tsubasa-theme") === "dark" ? "dark" : "light"; } catch { return "light"; }
+}
 function Arrow() { return <span aria-hidden="true">↗</span>; }
 function ExternalLink({ href, children, ...props }) {
   return <a href={href} target="_blank" rel="noopener noreferrer" {...props}>{children}</a>;
@@ -45,6 +49,7 @@ function ProjectVisual({ kind }) {
 }
 export default function Portfolio() {
   const [language, setLanguage] = useState(initialLanguage);
+  const [theme, setTheme] = useState(initialTheme);
   const [section, setSection] = useState("work");
   const [motion, setMotion] = useState(() => !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const copy = COPY[language];
@@ -52,12 +57,16 @@ export default function Portfolio() {
     try { localStorage.setItem("tsubasa-language", language); } catch { /* Storage may be unavailable. */ }
     document.documentElement.lang = language === "zh" ? "zh-CN" : language;
   }, [language]);
-  return <div className={`portfolio ${motion ? "motion-on" : "motion-off"}`}>
+  useEffect(() => {
+    try { localStorage.setItem("tsubasa-theme", theme); } catch { /* Storage may be unavailable. */ }
+    document.documentElement.style.colorScheme = theme;
+  }, [theme]);
+  return <div className={`portfolio theme-${theme} ${motion ? "motion-on" : "motion-off"}`}>
     <a className="skip-link" href="#main-content">{copy.skip}</a>
     <div className="code-rain" aria-hidden="true">{Array.from({ length: 22 }, (_, i) => <span key={i} style={{ "--column": i, "--delay": `${-i * 1.7}s` }}>{i % 2 ? "01 ア イ 0 ツ 1 キ 01 ユ 0 メ 1" : "1 ヲ 0 シ 01 コ 1 ト 0 ナ 10"}</span>)}</div>
     <header className="topbar">
       <a className="wordmark" href="#" onClick={() => setSection("work")} aria-label="Tsubasa"><span className="brand-symbol">翼</span> TSUBASA<span className="brand-cursor">_</span></a>
-      <div className="language-switch" role="group" aria-label={copy.language}><span className="language-caption">{copy.language}</span>{LANGUAGES.map(l => <button key={l.code} type="button" lang={l.code} aria-pressed={language === l.code} onClick={() => setLanguage(l.code)}>{l.label}</button>)}</div>
+      <div className="topbar-controls"><button className="theme-toggle" type="button" aria-label={`${THEME_COPY[language].theme}: ${theme === "dark" ? THEME_COPY[language].light : THEME_COPY[language].dark}`} aria-pressed={theme === "light"} onClick={() => setTheme(theme === "dark" ? "light" : "dark")}><span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span>{theme === "dark" ? THEME_COPY[language].light : THEME_COPY[language].dark}</button><div className="language-switch" role="group" aria-label={copy.language}><span className="language-caption">{copy.language}</span>{LANGUAGES.map(l => <button key={l.code} type="button" lang={l.code} aria-pressed={language === l.code} onClick={() => setLanguage(l.code)}>{l.label}</button>)}</div></div>
     </header>
     <div className="page-shell">
       <aside className="profile">
