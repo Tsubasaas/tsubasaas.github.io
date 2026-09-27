@@ -22,9 +22,10 @@ const LINKS = [
   { label: "Substack", url: "https://tsubasayf.substack.com/" },
 ];
 const PROJECTS = [
-  { name: "Momentweaver", url: "https://www.momentweaver.com/", type: "card", kind: "momentKind", desc: "moment", visual: "moment" },
-  { name: "Chiko Roundtable", url: "https://chikoroundtable.com/login", type: "community", kind: "chikoKind", desc: "chiko", visual: "chiko" },
+  { name: "Momentweaver", url: "https://www.momentweaver.com/", type: "card", kind: "momentKind", desc: "moment", visual: "moment", releasedAt: "2026-09" },
+  { name: "Chiko Roundtable", url: "https://chikoroundtable.com/login", type: "community", kind: "chikoKind", desc: "chiko", visual: "chiko", releasedAt: "2026-04" },
 ];
+const RELEASE_LABEL = { en: "First released", zh: "初次发布", ja: "初回リリース" };
 const MOMENTWEAVER_STORY = {
   title: "A 100-Hour AI-Native Game Challenge",
   url: "https://tsubasayf.substack.com/p/a-100-hour-ai-native-game-challenge",
@@ -92,7 +93,7 @@ export default function Portfolio() {
         <section className="content-section" key={section} aria-labelledby="section-title">
           <div className="section-heading"><p className="small-label"><span className="green">//</span> {section === "work" ? copy.selected : copy.archive}<span className="heading-line" /></p><h2 id="section-title">{section === "work" ? copy.heading : section === "writing" ? copy.writingHeading : copy.pubHeading}<span className="heading-dot">.</span></h2><p className="section-subtitle">{section === "work" ? copy.subtitle : section === "writing" ? copy.writingSub : copy.pubSub}</p><span className="section-coordinate" aria-hidden="true">[ 0{["work", "writing", "publications"].indexOf(section) + 1} — 03 ]</span></div>
           {section === "work" ? <div className="project-grid">{PROJECTS.map((project, i) => <article className="project-card" key={project.name}>
-            <ExternalLink href={project.url} className="project-link" aria-label={`${copy.project}: ${project.name}`}><div className="project-top"><span>0{i + 1} <span className="muted">/ {copy[project.type]}</span></span><Arrow /></div><ProjectVisual kind={project.visual} tagline={project.visual === "moment" ? copy.momentTagline : "Where every encounter sparks"} /><div className="project-details"><span className="project-kind">{copy[project.kind]}</span><h3>{project.name}</h3><p>{copy[project.desc]}</p><div className="project-cta">{copy.project}<Arrow /></div></div></ExternalLink>
+            <ExternalLink href={project.url} className="project-link" aria-label={`${copy.project}: ${project.name}`}><div className="project-top"><span>0{i + 1} <span className="muted">/ {copy[project.type]}</span></span><Arrow /></div><ProjectVisual kind={project.visual} tagline={project.visual === "moment" ? copy.momentTagline : "Where every encounter sparks"} /><div className="project-details"><span className="project-kind">{copy[project.kind]}</span><h3>{project.name}</h3><div className="project-release">{RELEASE_LABEL[language]} <time dateTime={project.releasedAt}>{project.releasedAt}</time></div><p>{copy[project.desc]}</p><div className="project-cta">{copy.project}<Arrow /></div></div></ExternalLink>
             {project.visual === "moment" && <ExternalLink href={MOMENTWEAVER_STORY.url} className="project-story">{ARTICLE_COPY[language].story}<Arrow /></ExternalLink>}
           </article>)}</div> : section === "writing" ? <article className="writing-card">
             <ExternalLink href={MOMENTWEAVER_STORY.url} className="writing-link"><img className="writing-cover" src="/ai-native-game-challenge-cover.png" alt="The 100-Hour AI-Native Game Challenge — Reflections on the Future of Human Creativity" width="1672" height="941" /><div className="writing-details"><div className="writing-meta"><span className="small-label green">SUBSTACK</span><span className="writing-date">{ARTICLE_COPY[language].updated} <time dateTime={MOMENTWEAVER_STORY.updatedAt}>{MOMENTWEAVER_STORY.updatedAt}</time></span></div><h3 lang="en">{MOMENTWEAVER_STORY.title}</h3><div className="project-cta">{ARTICLE_COPY[language].read}<Arrow /></div></div></ExternalLink>
