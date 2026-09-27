@@ -19,11 +19,22 @@ const COPY = {
 };
 const LINKS = [
   { label: "GitHub", url: "https://github.com/Tsubasaas" },
+  { label: "Substack", url: "https://tsubasayf.substack.com/" },
 ];
 const PROJECTS = [
   { name: "Momentweaver", url: "https://www.momentweaver.com/", type: "card", kind: "momentKind", desc: "moment", visual: "moment" },
   { name: "Chiko Roundtable", url: "https://chikoroundtable.com/login", type: "community", kind: "chikoKind", desc: "chiko", visual: "chiko" },
 ];
+const MOMENTWEAVER_STORY = {
+  title: "A 100-Hour AI-Native Game Challenge",
+  url: "https://tsubasayf.substack.com/p/a-100-hour-ai-native-game-challenge",
+  updatedAt: "2026-09-27",
+};
+const ARTICLE_COPY = {
+  en: { story: "Behind the story", read: "Read article", updated: "Updated" },
+  zh: { story: "背后的故事", read: "阅读原文", updated: "更新于" },
+  ja: { story: "制作の舞台裏", read: "記事を読む", updated: "更新日" },
+};
 function initialLanguage() {
   try { const saved = localStorage.getItem("tsubasa-language"); return LANGUAGES.some(l => l.code === saved) ? saved : "en"; } catch { return "en"; }
 }
@@ -80,8 +91,13 @@ export default function Portfolio() {
         <nav className="section-nav" aria-label={copy.nav}>{["work", "writing", "publications"].map((item, i) => <button type="button" key={item} onClick={() => setSection(item)} aria-current={section === item ? "page" : undefined}><span className="nav-number">0{i + 1}</span>{copy[item]}{item === "work" && <span className="item-count">02</span>}</button>)}</nav>
         <section className="content-section" key={section} aria-labelledby="section-title">
           <div className="section-heading"><p className="small-label"><span className="green">//</span> {section === "work" ? copy.selected : copy.archive}<span className="heading-line" /></p><h2 id="section-title">{section === "work" ? copy.heading : section === "writing" ? copy.writingHeading : copy.pubHeading}<span className="heading-dot">.</span></h2><p className="section-subtitle">{section === "work" ? copy.subtitle : section === "writing" ? copy.writingSub : copy.pubSub}</p><span className="section-coordinate" aria-hidden="true">[ 0{["work", "writing", "publications"].indexOf(section) + 1} — 03 ]</span></div>
-          {section === "work" ? <div className="project-grid">{PROJECTS.map((project, i) => <article className="project-card" key={project.name}><ExternalLink href={project.url} className="project-link" aria-label={`${copy.project}: ${project.name}`}><div className="project-top"><span>0{i + 1} <span className="muted">/ {copy[project.type]}</span></span><Arrow /></div><ProjectVisual kind={project.visual} tagline={project.visual === "moment" ? copy.momentTagline : "Where every encounter sparks"} /><div className="project-details"><span className="project-kind">{copy[project.kind]}</span><h3>{project.name}</h3><p>{copy[project.desc]}</p><div className="project-cta">{copy.project}<Arrow /></div></div></ExternalLink></article>)}</div> : <div className="coming-soon"><div className="empty-glyph" aria-hidden="true">{section === "writing" ? "[ _ ]" : "{ … }"}</div><p className="small-label green">{copy.upcoming}</p><h3>{section === "writing" ? copy.writingEmpty : copy.pubEmpty}</h3><p>{section === "writing" ? copy.writingNote : copy.pubNote}</p></div>}
-          <div className="section-end" aria-hidden="true"><span>+</span><span>{section === "work" ? "END OF SELECTED WORK / MORE TO COME" : "TO BE CONTINUED"}</span><span>+</span></div>
+          {section === "work" ? <div className="project-grid">{PROJECTS.map((project, i) => <article className="project-card" key={project.name}>
+            <ExternalLink href={project.url} className="project-link" aria-label={`${copy.project}: ${project.name}`}><div className="project-top"><span>0{i + 1} <span className="muted">/ {copy[project.type]}</span></span><Arrow /></div><ProjectVisual kind={project.visual} tagline={project.visual === "moment" ? copy.momentTagline : "Where every encounter sparks"} /><div className="project-details"><span className="project-kind">{copy[project.kind]}</span><h3>{project.name}</h3><p>{copy[project.desc]}</p><div className="project-cta">{copy.project}<Arrow /></div></div></ExternalLink>
+            {project.visual === "moment" && <ExternalLink href={MOMENTWEAVER_STORY.url} className="project-story">{ARTICLE_COPY[language].story}<Arrow /></ExternalLink>}
+          </article>)}</div> : section === "writing" ? <article className="writing-card">
+            <ExternalLink href={MOMENTWEAVER_STORY.url} className="writing-link"><img className="writing-cover" src="/ai-native-game-challenge-cover.png" alt="The 100-Hour AI-Native Game Challenge — Reflections on the Future of Human Creativity" width="1672" height="941" /><div className="writing-details"><div className="writing-meta"><span className="small-label green">SUBSTACK</span><span className="writing-date">{ARTICLE_COPY[language].updated} <time dateTime={MOMENTWEAVER_STORY.updatedAt}>{MOMENTWEAVER_STORY.updatedAt}</time></span></div><h3 lang="en">{MOMENTWEAVER_STORY.title}</h3><div className="project-cta">{ARTICLE_COPY[language].read}<Arrow /></div></div></ExternalLink>
+          </article> : <div className="coming-soon"><div className="empty-glyph" aria-hidden="true">{ "{ … }" }</div><p className="small-label green">{copy.upcoming}</p><h3>{copy.pubEmpty}</h3><p>{copy.pubNote}</p></div>}
+          <div className="section-end" aria-hidden="true"><span>+</span><span>{section === "work" ? "END OF SELECTED WORK / MORE TO COME" : section === "writing" ? "END OF DAILY NOTES / MORE TO COME" : "TO BE CONTINUED"}</span><span>+</span></div>
         </section>
       </main>
     </div>
