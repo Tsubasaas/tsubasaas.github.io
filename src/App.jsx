@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./styles.css";
 
 const LANGUAGES = [{ code: "en", label: "EN" }, { code: "zh", label: "中文" }, { code: "ja", label: "日本語" }];
@@ -21,6 +21,13 @@ const LINKS = [
   { label: "GitHub", url: "https://github.com/Tsubasaas" },
   { label: "Substack", url: "https://tsubasayf.substack.com/" },
 ];
+const FOLLOW_COPY = {
+  en: { button: "Follow", title: "Stay curious.", description: "New ideas, experiments, and stories. From my notebook to your inbox.", close: "Close", email: "Your email", submit: "Continue to subscribe", note: "Continue on Substack to confirm your subscription. Unsubscribe anytime.", privacy: "Privacy", terms: "Terms" },
+  zh: { button: "关注动态", title: "让好奇，继续。", description: "新的想法、实验与故事。从我的笔记，到你的收件箱。", close: "关闭", email: "你的邮箱", submit: "继续订阅", note: "下一步前往 Substack 确认订阅，随时可以退订。", privacy: "隐私政策", terms: "使用条款" },
+  ja: { button: "フォロー", title: "好奇心の、その先へ。", description: "新しいアイデア、実験、物語。私のノートから、あなたの受信箱へ。", close: "閉じる", email: "メールアドレス", submit: "購読手続きへ", note: "次の画面で Substack の購読手続きを完了してください。いつでも配信を停止できます。", privacy: "プライバシー", terms: "利用規約" },
+};
+const PUBLICATION_TAGLINE = { en: "Let things play out.", zh: "让子弹飞一会", ja: "もう少し、成り行きを見守ろう。" };
+const DAILY_TAGLINE = "Find the curious question in next decades";
 const PROJECTS = [
   { name: "Momentweaver", url: "https://www.momentweaver.com/", type: "card", kind: "momentKind", desc: "moment", visual: "moment", releasedAt: "2026-09" },
   { name: "Chiko Roundtable", url: "https://chikoroundtable.com/login", type: "community", kind: "chikoKind", desc: "chiko", visual: "chiko", releasedAt: "2026-04" },
@@ -61,6 +68,9 @@ export default function Portfolio() {
   const [language, setLanguage] = useState(initialLanguage);
   const [theme, setTheme] = useState(initialTheme);
   const [section, setSection] = useState("work");
+  const followDialog = useRef(null);
+  const [followOpen, setFollowOpen] = useState(false);
+  const follow = FOLLOW_COPY[language];
   const [motion, setMotion] = useState(() => !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const copy = COPY[language];
   useEffect(() => {
@@ -71,6 +81,12 @@ export default function Portfolio() {
     try { localStorage.setItem("tsubasa-theme", theme); } catch { /* Storage may be unavailable. */ }
     document.documentElement.style.colorScheme = theme;
   }, [theme]);
+  useEffect(() => {
+    if (!followOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [followOpen]);
   return <div className={`portfolio theme-${theme} ${motion ? "motion-on" : "motion-off"}`}>
     <a className="skip-link" href="#main-content">{copy.skip}</a>
     <div className="code-rain" aria-hidden="true">{Array.from({ length: 22 }, (_, i) => <span key={i} style={{ "--column": i, "--delay": `${-i * 1.7}s` }}>{i % 2 ? "01 ア イ 0 ツ 1 キ 01 ユ 0 メ 1" : "1 ヲ 0 シ 01 コ 1 ト 0 ナ 10"}</span>)}</div>
@@ -89,9 +105,12 @@ export default function Portfolio() {
         <p className="profile-note"><span aria-hidden="true">&gt;</span> {copy.welcome}<span className="text-cursor" aria-hidden="true">_</span></p>
       </aside>
       <main id="main-content" tabIndex="-1">
+        <div className="content-toolbar">
         <nav className="section-nav" aria-label={copy.nav}>{["work", "writing", "publications"].map((item, i) => <button type="button" key={item} onClick={() => setSection(item)} aria-current={section === item ? "page" : undefined}><span className="nav-number">0{i + 1}</span>{copy[item]}</button>)}</nav>
+        <button type="button" className="follow-button" aria-haspopup="dialog" onClick={() => { setFollowOpen(true); followDialog.current.showModal(); }}><span className="follow-plus" aria-hidden="true">＋</span>{follow.button}</button>
+        </div>
         <section className="content-section" key={section} aria-labelledby="section-title">
-          <div className="section-heading"><p className="small-label"><span className="green">//</span> {section === "work" ? copy.selected : copy.archive}<span className="heading-line" /></p><h2 id="section-title">{section === "work" ? copy.heading : section === "writing" ? copy.writingHeading : copy.pubHeading}<span className="heading-dot">.</span></h2><p className="section-subtitle">{section === "work" ? copy.subtitle : section === "writing" ? copy.writingSub : copy.pubSub}</p><span className="section-coordinate" aria-hidden="true">[ 0{["work", "writing", "publications"].indexOf(section) + 1} — 03 ]</span></div>
+          <div className="section-heading"><p className="small-label"><span className="green">//</span> {section === "work" ? copy.selected : copy.archive}<span className="heading-line" /></p><h2 id="section-title">{section === "work" ? copy.heading : section === "writing" ? copy.writingHeading : copy.pubHeading}<span className="heading-dot">.</span></h2><p className="section-subtitle" lang={section === "writing" ? "en" : undefined}>{section === "work" ? copy.subtitle : section === "writing" ? DAILY_TAGLINE : PUBLICATION_TAGLINE[language]}</p><span className="section-coordinate" aria-hidden="true">[ 0{["work", "writing", "publications"].indexOf(section) + 1} — 03 ]</span></div>
           {section === "work" ? <div className="project-grid">{PROJECTS.map((project, i) => <article className="project-card" key={project.name}>
             <ExternalLink href={project.url} className="project-link" aria-label={`${copy.project}: ${project.name}`}><div className="project-top"><span>0{i + 1} <span className="muted">/ {copy[project.type]}</span></span><Arrow /></div><ProjectVisual kind={project.visual} tagline={project.visual === "moment" ? copy.momentTagline : "Where every encounter sparks"} /><div className="project-details"><span className="project-kind">{copy[project.kind]}</span><h3>{project.name}</h3><div className="project-release">{RELEASE_LABEL[language]} <time dateTime={project.releasedAt}>{project.releasedAt}</time></div><p>{copy[project.desc]}</p></div></ExternalLink>
             <div className="project-action"><ExternalLink href={project.visual === "moment" ? MOMENTWEAVER_STORY.url : project.url} className="project-cta">{project.visual === "moment" ? ARTICLE_COPY[language].story : copy.project}<Arrow /></ExternalLink></div>
@@ -102,6 +121,21 @@ export default function Portfolio() {
         </section>
       </main>
     </div>
+    <dialog ref={followDialog} className="follow-dialog" aria-labelledby="follow-title" aria-describedby="follow-description" onClose={() => setFollowOpen(false)}>
+      <div className="follow-windowbar"><span>TSUBASA / NOTEBOOK</span><button type="button" className="follow-close" aria-label={follow.close} onClick={() => followDialog.current.close()}>×</button></div>
+      <div className="follow-body">
+        <div className="follow-kicker" aria-hidden="true"><span>// STAY IN THE LOOP</span><span>01 — ∞</span></div>
+        <h2 id="follow-title">{follow.title}<span className="follow-cursor" aria-hidden="true">_</span></h2>
+        <p id="follow-description">{follow.description}</p>
+        <form className="follow-form" action="https://tsubasayf.substack.com/subscribe" method="get">
+          <label htmlFor="follow-email">{follow.email}</label>
+          <div className="follow-input-wrap"><span aria-hidden="true">&gt;</span><input id="follow-email" name="email" type="email" autoComplete="email" placeholder="you@example.com" required maxLength={254} autoFocus aria-describedby="follow-note" /></div>
+          <button className="follow-submit" type="submit">{follow.submit}<Arrow /></button>
+          <p id="follow-note" className="follow-note">{follow.note}</p>
+        </form>
+        <div className="follow-dialog-footer"><span>POWERED BY SUBSTACK</span><div><ExternalLink href="https://substack.com/privacy">{follow.privacy}</ExternalLink><ExternalLink href="https://substack.com/tos">{follow.terms}</ExternalLink></div></div>
+      </div>
+    </dialog>
     <footer><span>© {new Date().getFullYear()} TSUBASA</span><span className="footer-thought">{copy.footer}</span><button type="button" className="motion-toggle" aria-pressed={motion} onClick={() => setMotion(!motion)}><span className={motion ? "status-dot" : "status-dot inactive"} />{copy.motion}: {motion ? copy.on : copy.off}</button></footer>
   </div>;
 }
