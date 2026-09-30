@@ -96,7 +96,6 @@ export default function Portfolio() {
     </header>
     <div className="page-shell">
       <aside className="profile">
-        <div className="profile-topline"><span className="status-dot" />{copy.portfolio}</div>
         <div className="portrait-frame"><img src="/avatar.jpg" alt={copy.portrait} width="1080" height="1080" /><span className="portrait-index">TS / 01</span><span className="portrait-cross">+</span></div>
         <h1>Tsubasa<span>翼</span></h1>
         <p className="profile-intro">{copy.intro}</p><p className="profile-bio">{copy.bio}</p>
