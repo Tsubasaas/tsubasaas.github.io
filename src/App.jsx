@@ -27,6 +27,13 @@ const FOLLOW_COPY = {
   ja: { button: "フォロー", title: "好奇心の、その先へ。", description: "新しいアイデア、実験、物語。私のノートから、あなたの受信箱へ。", close: "閉じる", email: "メールアドレス", submit: "購読手続きへ", note: "次の画面で Substack の購読手続きを完了してください。いつでも配信を停止できます。", privacy: "プライバシー", terms: "利用規約" },
 };
 const PUBLICATION_TAGLINE = { en: "Let things play out.", zh: "让子弹飞一会", ja: "もう少し、成り行きを見守ろう。" };
+const PUBLICATION = {
+  title: "AI を用いた避難支援システムに対する認知",
+  englishTitle: "Public Perceptions of the AI system to Support Evacuation",
+  authors: "米山 太賀・範 懿・石橋 真帆・横山 広美・関谷 直也",
+  url: "https://www.iii.u-tokyo.ac.jp/manage/wp-content/uploads/2025/04/41_4.pdf",
+};
+const PUBLICATION_READ = { en: "Read paper (PDF)", zh: "阅读论文（PDF）", ja: "論文を読む（PDF）" };
 const DAILY_TAGLINE = { en: "Find the curious questions in next decades", zh: "寻找未来几十年里令人好奇的问题", ja: "未来への問いを探して" };
 const PROJECTS = [
   { name: "Momentweaver", url: "https://www.momentweaver.com/", type: "card", kind: "momentKind", desc: "moment", visual: "moment", releasedAt: "2026-09" },
@@ -115,7 +122,9 @@ export default function Portfolio() {
             <div className="project-action"><ExternalLink href={project.visual === "moment" ? MOMENTWEAVER_STORY.url : project.url} className="project-cta">{project.visual === "moment" ? ARTICLE_COPY[language].story : copy.project}<Arrow /></ExternalLink></div>
           </article>)}</div> : section === "writing" ? <article className="writing-card">
             <ExternalLink href={MOMENTWEAVER_STORY.url} className="writing-link"><img className="writing-cover" src="/ai-native-game-challenge-cover.png" alt="The 100-Hour AI-Native Game Challenge — Reflections on the Future of Human Creativity" width="1672" height="941" /><div className="writing-details"><div className="writing-meta"><span className="small-label green">SUBSTACK</span><span className="writing-date">{ARTICLE_COPY[language].updated} <time dateTime={MOMENTWEAVER_STORY.updatedAt}>{MOMENTWEAVER_STORY.updatedAt}</time></span></div><h3 lang="en">{MOMENTWEAVER_STORY.title}</h3><div className="project-cta">{ARTICLE_COPY[language].read}<Arrow /></div></div></ExternalLink>
-          </article> : <div className="coming-soon"><div className="empty-glyph" aria-hidden="true">{ "{ … }" }</div><p className="small-label green">{copy.upcoming}</p><h3>{copy.pubEmpty}</h3><p>{copy.pubNote}</p></div>}
+          </article> : <article className="writing-card">
+            <ExternalLink href={PUBLICATION.url} className="writing-link"><div className="writing-details"><span className="small-label green">PDF / 日本語</span><h3 lang="ja">{PUBLICATION.title}</h3><p lang="en">{PUBLICATION.englishTitle}</p><p lang="ja">{PUBLICATION.authors}</p><div className="project-cta">{PUBLICATION_READ[language]}<Arrow /></div></div></ExternalLink>
+          </article>}
           <div className="section-end" aria-hidden="true"><span>+</span><span>{section === "work" ? "END OF SELECTED WORK / MORE TO COME" : section === "writing" ? "END OF DAILY NOTES / MORE TO COME" : "TO BE CONTINUED"}</span><span>+</span></div>
         </section>
       </main>
